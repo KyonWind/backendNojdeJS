@@ -9,7 +9,7 @@ let ProjectSchema = Schema({
     category: String,
     year: Number,
     langs: String,
-    image: String
+    image: Array
 });
 //esto debe exportarse a Controllers
 module.exports =  mongoose.model('Proyects',ProjectSchema);

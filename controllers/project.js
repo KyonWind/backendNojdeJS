@@ -1,4 +1,6 @@
+
 'use strict'
+
 let Project = require('../Models/project') //importamos el modelo con require()
 let controllers = {
     home: function (req, res) {
@@ -55,8 +57,16 @@ let controllers = {
         let projectId = req.params.id;
         let fileName = 'Imagen no subida';
         if (req.files) {
-            return res.status(200).send({
-                files: req.files
+            let filePath = req.files.image.path;
+            let fileSplit = filePath.split('\\');
+            fileName = fileSplit[1];
+
+            Project.findByIdAndUpdate(projectId,{image: fileName},{new: true}, (err, projectUpdate) =>{
+               if(err) return res.status(500).send({message: 'la imagen no pudo subirse'});
+               if(!projectUpdate) return res.status(404).send({message:'el proyecto no existe'});
+                return res.status(200).send({
+                    files: projectUpdate
+                });
             });
         } else {
             return res.status(200).send({
