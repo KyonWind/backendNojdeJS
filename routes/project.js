@@ -17,6 +17,7 @@ router.post('/saveProject', projectController.saveProject);
 router.get('/project/:id', projectController.getProject);
 router.get('/projectsList', projectController.getProjectList);
 router.post('/upload-image/:id', multipartMiddleware, projectController.uploadImage);
+router.get('getImage/:image', projectController.getImageFile);
 
 
 module.exports = router; // este modulo se carga en el app routes

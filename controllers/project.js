@@ -1,7 +1,11 @@
 
 'use strict'
 
-let Project = require('../Models/project') //importamos el modelo con require()
+let Project = require('../Models/project'); //importamos el modelo con require()
+let fs = require('fs');
+let path = require('path');
+
+
 let controllers = {
     home: function (req, res) {
        return res.status(200).send({
@@ -61,9 +65,9 @@ let controllers = {
             let fileSplit = filePath.split('\\');
             fileName = fileSplit[1];
 
-            Project.findByIdAndUpdate(projectId,{image: fileName},{new: true}, (err, projectUpdate) =>{
-               if(err) return res.status(500).send({message: 'la imagen no pudo subirse'});
-               if(!projectUpdate) return res.status(404).send({message:'el proyecto no existe'});
+            Project.findByIdAndUpdate(projectId, {image: fileName}, {new: true}, (err, projectUpdate) => {
+                if (err) return res.status(500).send({message: 'la imagen no pudo subirse'});
+                if (!projectUpdate) return res.status(404).send({message: 'el proyecto no existe'});
                 return res.status(200).send({
                     files: projectUpdate
                 });
@@ -73,7 +77,21 @@ let controllers = {
                 message: fileName
             });
         }
-    }
-    };
+    },
+    getImageFile: function (req, res) {
+        let file = req.params.image;
+        let pathFile = './uploads/' + file;
+        fs.exists(pathFile, (exists) =>{
+            if (exists){
+                return res.sendFile(path.resolve(pathFile));
+            }else{
+                return res.status(200).send({
+                    message: 'no existe la imagen'
+                });
+            }
+        });
+            }
+
+        };
 
     module.exports = controllers; //importamos el controllador a routes
